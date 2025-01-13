@@ -29,4 +29,48 @@ export const THEME = {
     bodyRegular: 'Roboto_400Regular',
     bodyBold: 'Roboto_700Bold',
   },
+
+  SIZE: {
+    HEADING: {
+      xl: 36,
+      lg: 24,
+      md: 20,
+      sm: 16,
+      xs: 14,
+    },
+
+    BODY: {
+      lg: 20,
+      md: 16,
+      sm: 14,
+      xs: 12,
+    },
+
+    tag: 10,
+    button: 14,
+  },
+
+  LINE_HEIGHT: {
+    HEADING: {
+      xl: 46.8,
+      lg: 31.2,
+      md: 26,
+      sm: 20.8,
+      xs: 18.2,
+    },
+
+    BODY: {
+      lg: 26,
+      md: 20.8,
+      sm: 18.2,
+      xs: 15.6,
+    },
+
+    tag: 13,
+    button: 22.4,
+  },
+
+  SPACE: {
+    X: 32,
+  },
 } as const

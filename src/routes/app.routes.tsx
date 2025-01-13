@@ -4,16 +4,7 @@ import { Catalog } from '@screens/Catalog'
 import { Product } from '@screens/Product'
 import { Success } from '@screens/Success'
 
-type AppRoutesType = {
-  catalog: undefined
-  product: {
-    id?: string
-  }
-  cart: undefined
-  success: undefined
-}
-
-const Stack = createNativeStackNavigator<AppRoutesType>()
+const Stack = createNativeStackNavigator()
 
 export function AppRoutes() {
   return (

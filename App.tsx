@@ -4,7 +4,7 @@ import { Routes } from '@routes/index'
 import { useFonts } from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
-import { StatusBar, Text, View } from 'react-native'
+import { StatusBar } from 'react-native'
 
 SplashScreen.preventAutoHideAsync()
 
