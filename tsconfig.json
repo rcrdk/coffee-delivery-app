@@ -6,6 +6,7 @@
     "verbatimModuleSyntax": true,
     "paths": {
       "@dtos/*": ["./src/dtos/*"],
+      "@data/*": ["./src/data/*"],
       "@assets/*": ["./src/assets/*"],
       "@components/*": ["./src/components/*"],
       "@screens/*": ["./src/screens/*"],

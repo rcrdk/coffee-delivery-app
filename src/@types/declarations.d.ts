@@ -5,3 +5,5 @@ declare module 'react-native-svg' {
     className?: string
   }
 }
+
+declare module '*.png'

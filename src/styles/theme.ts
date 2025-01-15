@@ -72,5 +72,7 @@ export const THEME = {
 
   SPACE: {
     X: 32,
+    Y: 16,
+    GAP: 12,
   },
 } as const
