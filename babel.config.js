@@ -22,6 +22,7 @@ module.exports = function (api) {
             '@routes/*': './src/routes/*',
             '@schemas/*': './src/schemas/*',
             '@styles/*': './src/styles/*',
+            '@reducers/*': './src/reducers/*',
             'tailwind.config': './tailwind.config.js',
           },
         },

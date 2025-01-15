@@ -1,3 +1,4 @@
+import { CartContextProvider } from '@contexts/CartContext'
 import { Baloo2_700Bold } from '@expo-google-fonts/baloo-2'
 import { Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto'
 import { Routes } from '@routes/index'
@@ -29,7 +30,9 @@ export default function App() {
     <>
       <StatusBar translucent />
 
-      <Routes />
+      <CartContextProvider>
+        <Routes />
+      </CartContextProvider>
     </>
   )
 }

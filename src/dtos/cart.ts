@@ -1,14 +1,10 @@
-// import type { NewOrderFormData } from '../schemas/cart'
 import type { Product } from './product'
 
-export interface CartItem {
+export type CartItemSize = '114ml' | '140ml' | '227ml'
+
+export type CartItem = {
   id: string
   product: Product
+  size: CartItemSize
   quantity: number
-}
-
-export interface Order {
-  id: string
-  // data: NewOrderFormData
-  products: CartItem[]
 }
