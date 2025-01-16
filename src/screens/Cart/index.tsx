@@ -1,5 +1,5 @@
 import { useCart } from '@hooks/cart'
-import { FlatList, ScrollView, Text, View } from 'react-native'
+import { FlatList, View } from 'react-native'
 
 import { CartItem } from './components/CartItem'
 import { Empty } from './components/Empty'
