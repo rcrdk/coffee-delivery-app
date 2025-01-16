@@ -8,6 +8,13 @@ export const styles = StyleSheet.create({
     paddingHorizontal: THEME.SPACE.X,
     backgroundColor: THEME.COLORS.white,
     gap: THEME.SPACE.GAP,
+    zIndex: 1,
+  },
+
+  sticky: {
+    paddingBottom: THEME.SPACE.Y,
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.COLORS.gray700,
   },
 
   tags: {

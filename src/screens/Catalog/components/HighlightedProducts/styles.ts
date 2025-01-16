@@ -6,6 +6,10 @@ export const styles = StyleSheet.create({
     position: 'relative',
   },
 
+  inner: {
+    zIndex: 2,
+  },
+
   background: {
     position: 'absolute',
     left: 0,
@@ -20,14 +24,5 @@ export const styles = StyleSheet.create({
     zIndex: 2,
     paddingVertical: THEME.SPACE.Y * 2,
     paddingLeft: THEME.SPACE.X,
-  },
-
-  decoration: {
-    position: 'absolute',
-    top: -24,
-    right: 10,
-    width: 83,
-    height: 83,
-    objectFit: 'cover',
   },
 })

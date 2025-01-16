@@ -4,14 +4,26 @@ import type { Product } from '@dtos/product'
 import { useNavigation } from '@react-navigation/native'
 import { priceFormatted } from '@utils/price-formatted'
 import { Image, Pressable, View } from 'react-native'
+import Animated, {
+  Extrapolation,
+  interpolate,
+  type SharedValue,
+  useAnimatedStyle,
+} from 'react-native-reanimated'
 
 import { styles } from './styles'
 
 type Props = {
   product: Product
+  slidePosition: number
+  currentPosition: SharedValue<number>
 }
 
-export function ProductHighlight({ product }: Props) {
+export function ProductHighlight({
+  product,
+  currentPosition,
+  slidePosition,
+}: Props) {
   const navigator = useNavigation()
 
   function handleNavigation() {
@@ -20,8 +32,23 @@ export function ProductHighlight({ product }: Props) {
 
   const price = priceFormatted(product.price)
 
+  const itemAnimation = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          scale: interpolate(
+            currentPosition.value,
+            [242 * slidePosition, 242 * (slidePosition - 1)],
+            [1, 0.75],
+            Extrapolation.CLAMP,
+          ),
+        },
+      ],
+    }
+  })
+
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, itemAnimation]}>
       <Pressable style={styles.inner} onPress={handleNavigation}>
         <Image source={product.image} style={styles.image} />
 
@@ -46,6 +73,6 @@ export function ProductHighlight({ product }: Props) {
           </View>
         </View>
       </Pressable>
-    </View>
+    </Animated.View>
   )
 }

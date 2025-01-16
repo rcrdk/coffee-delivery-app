@@ -4,6 +4,7 @@ import { StyleSheet } from 'react-native'
 export const styles = StyleSheet.create({
   container: {
     paddingRight: THEME.SPACE.X,
+    transformOrigin: 'left center',
   },
 
   inner: {

@@ -24,4 +24,14 @@ export const styles = StyleSheet.create({
     top: 12,
     height: '100%',
   },
+
+  decoration: {
+    position: 'absolute',
+    top: '100%',
+    marginTop: 16,
+    right: 10,
+    width: 83,
+    height: 83,
+    objectFit: 'cover',
+  },
 })
