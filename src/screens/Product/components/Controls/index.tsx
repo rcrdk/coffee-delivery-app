@@ -1,12 +1,13 @@
 import { Button } from '@components/Button'
+import { QuantityControls } from '@components/QuantityControls'
 import { Text } from '@components/Text'
 import type { CartItem, CartItemSize } from '@dtos/cart'
 import type { Product } from '@dtos/product'
 import { useCart } from '@hooks/cart'
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { THEME } from '@styles/theme'
 import { Minus, Plus } from 'phosphor-react-native'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Pressable, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import uuid from 'react-native-uuid'
@@ -25,11 +26,10 @@ export function Controls({ product }: Props) {
   const { onAddToCart } = useCart()
   const navigator = useNavigation()
 
-  function handleQuantity(mode: 'add' | 'remove') {
+  function handleQuantity(mode: 'increase' | 'decrease') {
     setQuantity((prev) => {
-      if (mode === 'remove' && prev > 1) --prev
-      if (mode === 'add' && prev < 10) prev++
-
+      if (mode === 'decrease' && prev > 1) --prev
+      if (mode === 'increase') prev++
       return prev
     })
   }
@@ -45,6 +45,13 @@ export function Controls({ product }: Props) {
     onAddToCart(data)
     navigator.navigate('cart')
   }
+
+  useFocusEffect(
+    useCallback(() => {
+      setSizeSelected('114ml')
+      setQuantity(1)
+    }, []),
+  )
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.container}>
@@ -74,23 +81,11 @@ export function Controls({ product }: Props) {
         </View>
 
         <View style={styles.quantityContainer}>
-          <View style={styles.quantity}>
-            <Pressable
-              style={styles.quantityButton}
-              onPress={() => handleQuantity('remove')}
-            >
-              <Minus size={20} color={THEME.COLORS.purple} />
-            </Pressable>
-
-            <Text style={styles.quantityCount}>{quantity}</Text>
-
-            <Pressable
-              style={styles.quantityButton}
-              onPress={() => handleQuantity('add')}
-            >
-              <Plus size={20} color={THEME.COLORS.purple} />
-            </Pressable>
-          </View>
+          <QuantityControls
+            quantity={quantity}
+            onDecrease={() => handleQuantity('decrease')}
+            onIncrease={() => handleQuantity('increase')}
+          />
 
           <Button label="Adicionar" type="purple" onPress={handleAddToCart} />
         </View>

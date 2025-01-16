@@ -1,11 +1,24 @@
 import type { CartItem } from '@dtos/cart'
-import { storageCartGet } from '@storage/storageCart'
-import { createContext, type ReactNode, useEffect, useState } from 'react'
+import { storageCartGet, storageCartSave } from '@storage/storageCart'
+import { type QuantityModes, setQuantityMode } from '@utils/set-quantity-mode'
+import { current } from 'immer'
+import {
+  createContext,
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
+import { Alert } from 'react-native'
 
 interface CartContextType {
   cartCounter: number
   cartItems: CartItem[]
+  cartTotalPrice: number
   onAddToCart: (data: CartItem) => void
+  onChangeCartItemQuantity: (mode: QuantityModes, productId: string) => void
+  onRemoveProduct: (productId: string) => void
+  onConfirmOrder: VoidFunction
 }
 
 interface CartContextProviderProps {
@@ -15,19 +28,16 @@ interface CartContextProviderProps {
 export const CartContext = createContext({} as CartContextType)
 
 export function CartContextProvider({ children }: CartContextProviderProps) {
-  const [cartCounter, setCartCounter] = useState(0)
   const [cartItems, setCartItems] = useState<CartItem[]>([])
 
   async function getSavedCartItems() {
     const { products } = await storageCartGet()
     setCartItems(products)
-    // get product quantity
   }
 
   function onAddToCart(data: CartItem) {
-    const productOfSameSizeExists = cartItems.find(
-      (item) => item.product.id === data.product.id && item.size === data.size,
-    )
+    // eslint-disable-next-line prettier/prettier
+    const productOfSameSizeExists = cartItems.find((item) => item.product.id === data.product.id && item.size === data.size)
 
     if (productOfSameSizeExists) {
       setCartItems((prev) =>
@@ -45,20 +55,76 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
     } else {
       setCartItems((prev) => [...prev, data])
     }
-
-    setCartCounter((prev) => prev + data.quantity)
   }
+
+  function onChangeCartItemQuantity(mode: QuantityModes, productId: string) {
+    setCartItems((prev) => {
+      return prev.map((item) => {
+        if (item.id === productId) {
+          return {
+            ...item,
+            quantity: setQuantityMode(mode, item.quantity),
+          }
+        }
+
+        return item
+      })
+    })
+  }
+
+  function onRemoveProduct(productId: string) {
+    Alert.alert(
+      'Remover produto',
+      'Confirme a remoção do produto do carrinho',
+      [
+        { style: 'cancel', text: 'Cancelar' },
+        {
+          style: 'destructive',
+          text: 'Remover',
+          onPress: async () => {
+            setCartItems((prev) => {
+              return prev.filter((item) => item.id !== productId)
+            })
+          },
+        },
+      ],
+    )
+  }
+
+  function onConfirmOrder() {
+    setCartItems([])
+  }
+
+  const cartTotalPrice = useMemo(() => {
+    return cartItems.reduce((previous, current) => {
+      return previous + current.product.price * current.quantity
+    }, 0)
+  }, [cartItems])
+
+  const cartCounter = useMemo(() => {
+    return cartItems.reduce((previous, current) => {
+      return previous + current.quantity
+    }, 0)
+  }, [cartItems])
 
   useEffect(() => {
     getSavedCartItems()
   }, [])
+
+  useEffect(() => {
+    ;(async () => await storageCartSave(cartItems))()
+  }, [cartItems])
 
   return (
     <CartContext.Provider
       value={{
         cartCounter,
         cartItems,
+        cartTotalPrice,
         onAddToCart,
+        onChangeCartItemQuantity,
+        onRemoveProduct,
+        onConfirmOrder,
       }}
     >
       {children}

@@ -7,8 +7,6 @@ export const styles = StyleSheet.create({
     gap: 20,
     paddingHorizontal: THEME.SPACE.X,
     paddingVertical: THEME.SPACE.Y,
-    borderTopColor: THEME.COLORS.gray700,
-    borderTopWidth: 1,
   },
 
   image: {
@@ -18,4 +16,29 @@ export const styles = StyleSheet.create({
   },
 
   info: { flex: 1 },
+
+  controls: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 12,
+  },
+
+  quantity: {
+    borderWidth: 1,
+    borderColor: THEME.COLORS.gray600,
+  },
+
+  removeButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 38,
+    height: 38,
+    backgroundColor: THEME.COLORS.gray700,
+    borderRadius: 8,
+  },
+
+  price: {
+    gap: 3,
+    alignItems: 'flex-end',
+  },
 })

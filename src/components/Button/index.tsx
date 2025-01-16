@@ -1,6 +1,6 @@
 import { Text } from '@components/Text'
 import type { ComponentProps } from 'react'
-import { Pressable } from 'react-native'
+import { Pressable, type StyleProp, type ViewStyle } from 'react-native'
 
 import { styles } from './styles'
 
@@ -17,6 +17,8 @@ export function Button({ label, type, ...props }: Props) {
         styles.container,
         type === 'purple' && styles.containerPurple,
         type === 'yellow' && styles.containerYellow,
+        props.disabled && styles.disabled,
+        props.style as StyleProp<ViewStyle>,
       ]}
     >
       <Text style={styles.text} bold>

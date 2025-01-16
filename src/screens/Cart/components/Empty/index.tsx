@@ -4,22 +4,19 @@ import { Text } from '@components/Text'
 import { useNavigation } from '@react-navigation/native'
 import { View } from 'react-native'
 
-import { Illustration } from './Components/Illustration'
 import { styles } from './styles'
 
-export function Success() {
+export function Empty() {
   const navigator = useNavigation()
 
   return (
     <View style={styles.container}>
-      <Illustration />
-
       <Heading size="lg" color="yellowDark" style={styles.title} center>
-        Uhu! Pedido confirmado
+        Nenhum café adicionado
       </Heading>
 
       <Text size="sm" color="gray200" center>
-        Agora é só aguardar que logo o café chegará até você!
+        Confira agora nossa seleção de cafés
       </Text>
 
       <Button

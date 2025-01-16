@@ -27,22 +27,4 @@ export const styles = StyleSheet.create({
     marginTop: 20,
     gap: 16,
   },
-
-  quantity: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-
-  quantityCount: {
-    width: 20,
-    textAlign: 'center',
-  },
-
-  quantityButton: {
-    width: 36,
-    height: 36,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
 })

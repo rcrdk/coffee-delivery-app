@@ -10,8 +10,8 @@ export const styles = StyleSheet.create({
     flexGrow: 1,
   },
 
-  listContent: {
-    borderBottomColor: THEME.COLORS.gray700,
-    borderBottomWidth: 1,
+  separator: {
+    backgroundColor: THEME.COLORS.gray700,
+    height: 1,
   },
 })
