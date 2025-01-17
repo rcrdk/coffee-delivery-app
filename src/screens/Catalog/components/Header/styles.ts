@@ -10,9 +10,9 @@ export const styles = StyleSheet.create({
   },
 
   input: {
+    justifyContent: 'center',
     height: 42,
     backgroundColor: THEME.COLORS.gray200,
-    color: THEME.COLORS.gray600,
     paddingRight: 12,
     paddingLeft: 44,
     borderRadius: 4,

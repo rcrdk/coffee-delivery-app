@@ -2,8 +2,10 @@ import 'react-native-gesture-handler'
 
 import { SplashScreen as SplashScreenComponent } from '@components/SplashScreen'
 import { CartContextProvider } from '@contexts/CartContext'
+import { SearchContextProvider } from '@contexts/SearchContext'
 import { Baloo2_700Bold } from '@expo-google-fonts/baloo-2'
 import { Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto'
+import { PortalProvider } from '@gorhom/portal'
 import { Routes } from '@routes/index'
 import { THEME } from '@styles/theme'
 import { useFonts } from 'expo-font'
@@ -63,10 +65,14 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar translucent />
 
-      <CartContextProvider>
-        {showContent && <Routes />}
-        {showSplashScreen && <SplashScreenComponent />}
-      </CartContextProvider>
+      <PortalProvider>
+        <CartContextProvider>
+          <SearchContextProvider>
+            {showContent && <Routes />}
+            {showSplashScreen && <SplashScreenComponent />}
+          </SearchContextProvider>
+        </CartContextProvider>
+      </PortalProvider>
     </GestureHandlerRootView>
   )
 }
