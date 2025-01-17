@@ -7,7 +7,13 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: THEME.SPACE.X,
-    paddingVertical: THEME.SPACE.X,
+    paddingBottom: THEME.SPACE.X * 4,
+  },
+
+  inner: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   title: {

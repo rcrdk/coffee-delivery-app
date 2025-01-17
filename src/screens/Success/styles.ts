@@ -10,6 +10,12 @@ export const styles = StyleSheet.create({
     paddingVertical: THEME.SPACE.X,
   },
 
+  inner: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
   title: {
     marginTop: THEME.SPACE.X,
   },

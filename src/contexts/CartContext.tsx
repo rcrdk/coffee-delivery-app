@@ -17,7 +17,7 @@ interface CartContextType {
   cartItemAdded: CartItem | null
   onAddToCart: (data: CartItem) => void
   onChangeCartItemQuantity: (mode: QuantityModes, productId: string) => void
-  onRemoveProduct: (productId: string) => void
+  onRemoveProduct: (cartItemId: string) => void
   onConfirmOrder: VoidFunction
   onResetCartItemAdded: VoidFunction
 }

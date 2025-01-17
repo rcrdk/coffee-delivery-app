@@ -7,6 +7,11 @@ import { THEME } from '@styles/theme'
 import { priceFormatted } from '@utils/price-formatted'
 import { Trash } from 'phosphor-react-native'
 import { Image, Pressable, View } from 'react-native'
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 
 import { styles } from './styles'
 
@@ -14,8 +19,19 @@ type Props = {
   data: CartItemDTO
 }
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
+
 export function CartItem({ data }: Props) {
   const { onChangeCartItemQuantity, onRemoveProduct } = useCart()
+
+  const scale = useSharedValue(1)
+
+  const buttonAnimation = useAnimatedStyle(() => ({
+    transform: [{ scale: withTiming(scale.value, { duration: 100 }) }],
+  }))
+
+  const onPressIn = () => (scale.value = 0.9)
+  const onPressOut = () => (scale.value = 1)
 
   return (
     <View style={styles.container}>
@@ -38,12 +54,14 @@ export function CartItem({ data }: Props) {
             style={styles.quantity}
           />
 
-          <Pressable
-            style={styles.removeButton}
+          <AnimatedPressable
+            style={[styles.removeButton, buttonAnimation]}
             onPress={() => onRemoveProduct(data.id)}
+            onPressIn={onPressIn}
+            onPressOut={onPressOut}
           >
             <Trash size={20} color={THEME.COLORS.purple} />
-          </Pressable>
+          </AnimatedPressable>
         </View>
       </View>
 

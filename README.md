@@ -1,4 +1,4 @@
-# ☕️ Coffee Deloivery React Native App
+# ☕️ Coffee Delivery React Native App
 
 <!-- https://efficient-sloth-d85.notion.site/Desafio-05-Coffee-Delivery-Mobile-16e5dd711fab4c9696854a533d4c4f25 -->
 

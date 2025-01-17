@@ -20,26 +20,6 @@ export function Button({ label, type, ...props }: Props) {
   const scale = useSharedValue(1)
 
   const buttonAnimation = useAnimatedStyle(() => ({
-    // backgroundColor: withTiming(
-    //   interpolateColor(
-    //     active.value,
-    //     [0, 1],
-    //     [THEME.COLORS.gray700, THEME.COLORS.white],
-    //   ),
-    //   {
-    //     duration: 150,
-    //   },
-    // ),
-    // borderColor: withTiming(
-    //   interpolateColor(
-    //     active.value,
-    //     [0, 1],
-    //     [THEME.COLORS.gray700, THEME.COLORS.purple],
-    //   ),
-    //   {
-    //     duration: 150,
-    //   },
-    // ),
     transform: [{ scale: withTiming(scale.value, { duration: 100 }) }],
   }))
 

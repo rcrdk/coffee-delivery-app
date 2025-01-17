@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
     gap: 20,
     paddingHorizontal: THEME.SPACE.X,
     paddingVertical: THEME.SPACE.Y,
+    backgroundColor: THEME.COLORS.white,
   },
 
   image: {

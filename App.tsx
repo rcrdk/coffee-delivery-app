@@ -1,3 +1,5 @@
+import 'react-native-gesture-handler'
+
 import { SplashScreen as SplashScreenComponent } from '@components/SplashScreen'
 import { CartContextProvider } from '@contexts/CartContext'
 import { Baloo2_700Bold } from '@expo-google-fonts/baloo-2'
@@ -9,6 +11,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import { useEffect, useState } from 'react'
 import { StatusBar } from 'react-native'
 import { View } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -57,13 +60,13 @@ export default function App() {
   }
 
   return (
-    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar translucent />
 
       <CartContextProvider>
         {showContent && <Routes />}
         {showSplashScreen && <SplashScreenComponent />}
       </CartContextProvider>
-    </>
+    </GestureHandlerRootView>
   )
 }
