@@ -20,6 +20,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import { CartAddedProduct } from './components/CartAddedProduct'
 import { Filters } from './components/FIlters'
 import { Header } from './components/Header'
 import { HighlightedProducts } from './components/HighlightedProducts'
@@ -223,6 +224,8 @@ export function Catalog() {
           )
         }}
       />
+
+      <CartAddedProduct />
     </>
   )
 }

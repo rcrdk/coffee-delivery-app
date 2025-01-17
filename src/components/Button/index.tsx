@@ -43,7 +43,7 @@ export function Button({ label, type, ...props }: Props) {
     transform: [{ scale: withTiming(scale.value, { duration: 100 }) }],
   }))
 
-  const onPressIn = () => (scale.value = 0.9)
+  const onPressIn = () => (scale.value = 0.97)
   const onPressOut = () => (scale.value = 1)
 
   return (

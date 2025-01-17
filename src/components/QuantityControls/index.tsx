@@ -32,7 +32,7 @@ function QuantityControlButton({ mode, onPress }: ButtonProps) {
     transform: [{ scale: withTiming(scale.value, { duration: 100 }) }],
   }))
 
-  const onPressIn = () => (scale.value = 1.25)
+  const onPressIn = () => (scale.value = 1.15)
   const onPressOut = () => (scale.value = 1)
 
   return (
