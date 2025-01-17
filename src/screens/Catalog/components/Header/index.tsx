@@ -1,4 +1,3 @@
-import decorationImage from '@assets/decoration.png'
 import { Heading } from '@components/Heading'
 import { THEME } from '@styles/theme'
 import { MagnifyingGlass } from 'phosphor-react-native'
@@ -13,19 +12,25 @@ import Animated, {
 
 import { styles } from './styles'
 
-export function Header() {
-  const containerTranslate = useSharedValue(48)
+const decorationImage = require('@assets/decoration.png')
 
-  const containerTrnaslateAnimation = useAnimatedStyle(() => ({
-    transform: [{ translateY: containerTranslate.value }],
+export function Header() {
+  const containerTranslate = useSharedValue(72)
+
+  const containerTranslateAnimation = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateY: containerTranslate.value,
+      },
+    ],
   }))
 
   useEffect(() => {
-    containerTranslate.value = withDelay(250, withTiming(0, { duration: 750 }))
+    containerTranslate.value = withDelay(250, withTiming(0, { duration: 1000 }))
   }, [containerTranslate])
 
   return (
-    <Animated.View style={[styles.container, containerTrnaslateAnimation]}>
+    <Animated.View style={[styles.container, containerTranslateAnimation]}>
       <Heading size="md" color="white">
         Encontre o café perfeito para qualquer hora do dia
       </Heading>

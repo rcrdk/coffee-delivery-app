@@ -16,12 +16,9 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    lineHeight: 16,
     width: 20,
     height: 20,
     borderRadius: 20,
-    borderWidth: 2,
-    borderColor: THEME.COLORS.gray100,
     backgroundColor: THEME.COLORS.purple,
   },
 })

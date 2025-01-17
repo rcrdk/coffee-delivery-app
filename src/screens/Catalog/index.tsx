@@ -32,18 +32,19 @@ const AnimatedSectionList =
 
 export function Catalog() {
   const listRef = useAnimatedRef<SectionList>()
-  const filtersRef = useAnimatedRef<Animated.View>()
 
   const [activeSection, setActiveSection] = useState('')
 
   const { top } = useSafeAreaInsets()
 
   const scrollInY = useSharedValue(0)
-  const curtainHeight = useSharedValue(100)
+  const curtainHeight = useSharedValue(500)
   const filterTopOffset = useSharedValue(0)
+  const filterEnterTranslate = useSharedValue(100)
 
   const curtainHeightAnimation = useAnimatedStyle(() => ({
-    height: `${curtainHeight.value}%`,
+    height: curtainHeight.value,
+    zIndex: 1,
   }))
 
   const topBarScrollAnimation = useAnimatedStyle(() => ({
@@ -52,7 +53,7 @@ export function Catalog() {
     left: 0,
     width: '100%',
     justifyContent: 'center',
-    zIndex: 2,
+    zIndex: 4,
     borderBottomWidth: 1,
     backgroundColor: interpolateColor(
       scrollInY.value,
@@ -101,12 +102,16 @@ export function Catalog() {
     ],
   }))
 
+  const filtersEnterAnimation = useAnimatedStyle(() => ({
+    paddingTop: filterEnterTranslate.value,
+  }))
+
   function handleScrollToSection(sectionIndex: number) {
     listRef.current?.scrollToLocation({
       animated: true,
       sectionIndex,
       itemIndex: 0,
-      viewOffset: 175 + top,
+      viewOffset: 175 + top + 100,
     })
   }
 
@@ -129,8 +134,15 @@ export function Catalog() {
   })
 
   useEffect(() => {
-    curtainHeight.value = withDelay(250, withTiming(0, { duration: 1000 }))
+    curtainHeight.value = withDelay(250, withTiming(200, { duration: 1000 }))
   }, [curtainHeight])
+
+  useEffect(() => {
+    filterEnterTranslate.value = withDelay(
+      250,
+      withTiming(0, { duration: 750 }),
+    )
+  }, [filterEnterTranslate])
 
   return (
     <>
@@ -159,24 +171,27 @@ export function Catalog() {
         keyExtractor={(item) => String(item.id)}
         ListHeaderComponent={() => (
           <View style={[styles.container, { paddingTop: top + 76 + 16 }]}>
-            <Header />
-            <HighlightedProducts />
+            <View>
+              <Header />
+              <HighlightedProducts />
 
-            <Animated.View
-              ref={filtersRef}
-              onLayout={(event) =>
-                (filterTopOffset.value = event.nativeEvent.layout.y)
-              }
-            >
-              <Filters
-                activeSection={activeSection}
-                onSelect={handleScrollToSection}
+              <Animated.View
+                style={[styles.enterCurtain, curtainHeightAnimation]}
               />
-            </Animated.View>
+            </View>
 
-            <Animated.View
-              style={[styles.enterCurtain, curtainHeightAnimation]}
-            />
+            <View
+              // eslint-disable-next-line prettier/prettier
+              onLayout={(event) => filterTopOffset.value = event.nativeEvent.layout.y}
+              style={styles.inlineFilterContainer}
+            >
+              <Animated.View style={[filtersEnterAnimation]}>
+                <Filters
+                  activeSection={activeSection}
+                  onSelect={handleScrollToSection}
+                />
+              </Animated.View>
+            </View>
           </View>
         )}
         renderSectionHeader={({ section }) => (
@@ -201,7 +216,11 @@ export function Catalog() {
           itemVisiblePercentThreshold: 50,
         }}
         onViewableItemsChanged={({ viewableItems }) => {
-          setActiveSection(viewableItems.at(1)?.section?.title ?? '')
+          setActiveSection(
+            viewableItems.at(2)?.section?.title ??
+              groupedProducts.at(0)?.title ??
+              'Tradicional',
+          )
         }}
       />
     </>

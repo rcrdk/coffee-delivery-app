@@ -11,12 +11,25 @@ export const styles = StyleSheet.create({
     backgroundColor: THEME.COLORS.gray100,
   },
 
+  topbar: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: THEME.SPACE.X,
+  },
+
+  location: {
+    flexDirection: 'row',
+    gap: 4,
+    alignItems: 'center',
+  },
+
   enterCurtain: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     width: '100%',
-    height: '100%',
     backgroundColor: THEME.COLORS.white,
   },
 
@@ -34,17 +47,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: THEME.SPACE.X,
   },
 
-  topbar: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: THEME.SPACE.X,
-  },
-
-  location: {
-    flexDirection: 'row',
-    gap: 4,
-    alignItems: 'center',
+  inlineFilterContainer: {
+    backgroundColor: THEME.COLORS.white,
   },
 })

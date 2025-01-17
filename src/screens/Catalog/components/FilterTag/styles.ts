@@ -17,15 +17,5 @@ export const styles = StyleSheet.create({
     lineHeight: THEME.SIZE.tag,
     fontFamily: THEME.FONTS.bodyBold,
     textTransform: 'uppercase',
-    color: THEME.COLORS.purpleDark,
-  },
-
-  containerActive: {
-    backgroundColor: THEME.COLORS.purple,
-    borderColor: THEME.COLORS.purple,
-  },
-
-  textActive: {
-    color: THEME.COLORS.white,
   },
 })

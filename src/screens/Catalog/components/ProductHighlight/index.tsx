@@ -9,6 +9,8 @@ import Animated, {
   interpolate,
   type SharedValue,
   useAnimatedStyle,
+  useSharedValue,
+  withTiming,
 } from 'react-native-reanimated'
 
 import { styles } from './styles'
@@ -19,11 +21,15 @@ type Props = {
   currentPosition: SharedValue<number>
 }
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
+
 export function ProductHighlight({
   product,
   currentPosition,
   slidePosition,
 }: Props) {
+  const scale = useSharedValue(1)
+
   const navigator = useNavigation()
 
   function handleNavigation() {
@@ -47,9 +53,26 @@ export function ProductHighlight({
     }
   })
 
+  const pressableAnimation = useAnimatedStyle(() => ({
+    transform: [{ scale: withTiming(scale.value, { duration: 100 }) }],
+  }))
+
+  function onPressIn() {
+    scale.value = 0.9
+  }
+
+  function onPressOut() {
+    scale.value = 1
+  }
+
   return (
     <Animated.View style={[styles.container, itemAnimation]}>
-      <Pressable style={styles.inner} onPress={handleNavigation}>
+      <AnimatedPressable
+        style={[styles.inner, pressableAnimation]}
+        onPress={handleNavigation}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
+      >
         <Image source={product.image} style={styles.image} />
 
         <View style={styles.info}>
@@ -72,7 +95,7 @@ export function ProductHighlight({
             </Heading>
           </View>
         </View>
-      </Pressable>
+      </AnimatedPressable>
     </Animated.View>
   )
 }

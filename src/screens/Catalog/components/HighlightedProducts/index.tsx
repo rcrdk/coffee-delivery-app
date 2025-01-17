@@ -45,11 +45,7 @@ export function HighlightedProducts() {
   useFocusEffect(
     useCallback(() => {
       flatListRef.current?.scrollToOffset({ animated: true, offset: 0 })
-
-      scrollInX.value = 0
-      containerTranslate.value = 0
-      containerScale.value = 1
-    }, [containerScale, containerTranslate, flatListRef, scrollInX]),
+    }, [flatListRef]),
   )
 
   return (
@@ -79,8 +75,6 @@ export function HighlightedProducts() {
           ref={flatListRef}
         />
       </Animated.View>
-
-      <View style={styles.background} />
     </View>
   )
 }

@@ -43,7 +43,7 @@ export function Controls({ product }: Props) {
     }
 
     onAddToCart(data)
-    navigator.navigate('cart')
+    navigator.navigate('catalog')
   }
 
   useFocusEffect(
