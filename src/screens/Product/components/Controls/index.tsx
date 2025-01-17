@@ -6,6 +6,7 @@ import type { Product } from '@dtos/product'
 import { useCart } from '@hooks/cart'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import type { QuantityModes } from '@utils/set-quantity-mode'
+import { Audio } from 'expo-av'
 import { useCallback, useEffect, useState } from 'react'
 import { View } from 'react-native'
 import Animated, {
@@ -33,6 +34,14 @@ export function Controls({ product }: Props) {
   const { bottom } = useSafeAreaInsets()
   const navigator = useNavigation()
 
+  async function userFeedback() {
+    const file = require('@assets/sound-add-to-cart.mp3')
+
+    const { sound } = await Audio.Sound.createAsync(file, { shouldPlay: true })
+    await sound.setPositionAsync(0)
+    await sound.playAsync()
+  }
+
   function handleQuantity(mode: QuantityModes) {
     setQuantity((prev) => {
       if (mode === 'decrease' && prev > 1) --prev
@@ -50,6 +59,7 @@ export function Controls({ product }: Props) {
     }
 
     onAddToCart(data)
+    userFeedback()
     navigator.navigate('catalog')
   }
 

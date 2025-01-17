@@ -6,7 +6,12 @@ import { THEME } from '@styles/theme'
 import { groupBy } from '@utils/group-by'
 import { MapPin } from 'phosphor-react-native'
 import { useEffect, useMemo, useState } from 'react'
-import { SectionList, type SectionListProps, View } from 'react-native'
+import {
+  BackHandler,
+  SectionList,
+  type SectionListProps,
+  View,
+} from 'react-native'
 import Animated, {
   Extrapolation,
   interpolate,
@@ -144,6 +149,16 @@ export function Catalog() {
       withTiming(0, { duration: 750 }),
     )
   }, [filterEnterTranslate])
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => true,
+    )
+
+    return () => backHandler.remove()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <>

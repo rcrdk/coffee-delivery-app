@@ -1,6 +1,7 @@
 import type { CartItem } from '@dtos/cart'
 import { storageCartGet, storageCartSave } from '@storage/storageCart'
 import { type QuantityModes, setQuantityMode } from '@utils/set-quantity-mode'
+import { Audio } from 'expo-av'
 import {
   createContext,
   type ReactNode,
@@ -31,6 +32,14 @@ export const CartContext = createContext({} as CartContextType)
 export function CartContextProvider({ children }: CartContextProviderProps) {
   const [itemAdded, setItemAdded] = useState<CartItem | null>(null)
   const [cartItems, setCartItems] = useState<CartItem[]>([])
+
+  async function userFeedback() {
+    const file = require('@assets/sound-remove-from-cart.mp3')
+
+    const { sound } = await Audio.Sound.createAsync(file, { shouldPlay: true })
+    await sound.setPositionAsync(0)
+    await sound.playAsync()
+  }
 
   async function getSavedCartItems() {
     const { products } = await storageCartGet()
@@ -89,6 +98,8 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
             setCartItems((prev) => {
               return prev.filter((item) => item.id !== productId)
             })
+
+            userFeedback()
           },
         },
       ],

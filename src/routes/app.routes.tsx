@@ -9,10 +9,13 @@ const Stack = createNativeStackNavigator()
 export function AppRoutes() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="catalog" component={Catalog} />
+      <Stack.Group screenOptions={{ gestureEnabled: false }}>
+        <Stack.Screen name="catalog" component={Catalog} />
+        <Stack.Screen name="success" component={Success} />
+      </Stack.Group>
+
       <Stack.Screen name="product" component={Product} />
       <Stack.Screen name="cart" component={Cart} />
-      <Stack.Screen name="success" component={Success} />
     </Stack.Navigator>
   )
 }

@@ -2,8 +2,10 @@ import { Button } from '@components/Button'
 import { Heading } from '@components/Heading'
 import { Text } from '@components/Text'
 import { useNavigation } from '@react-navigation/native'
+import { Audio } from 'expo-av'
+import * as Haptics from 'expo-haptics'
 import { useEffect } from 'react'
-import { View } from 'react-native'
+import { BackHandler, View } from 'react-native'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -31,6 +33,15 @@ export function Success() {
     transform: [{ translateX: translateX.value }],
   }))
 
+  async function userFeedback() {
+    const file = require('@assets/sound-sent-order.mp3')
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
+
+    const { sound } = await Audio.Sound.createAsync(file, { shouldPlay: true })
+    await sound.setPositionAsync(0)
+    await sound.playAsync()
+  }
+
   useEffect(() => {
     translateX.value = withTiming(0, { duration: 1500 })
 
@@ -38,6 +49,20 @@ export function Success() {
     opacity.value = withTiming(1, { duration: 1000 })
     scale.value = withTiming(1, { duration: 1000 })
   }, [opacity, scale, translateX, translateY])
+
+  useEffect(() => {
+    userFeedback()
+  }, [])
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => true,
+    )
+
+    return () => backHandler.remove()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <View style={styles.container}>

@@ -23,7 +23,13 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-font"
+      "expo-font",
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Autorizar o uso do microphone para os efeitos sonoros do app."
+        }
+      ]
     ]
   }
 }
