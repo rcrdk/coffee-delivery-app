@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    gap: 6,
+    gap: 12,
   },
 
   title: {

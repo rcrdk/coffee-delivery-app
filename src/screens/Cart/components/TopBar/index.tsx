@@ -1,13 +1,15 @@
 import { BackButton } from '@components/BackButton'
 import { Heading } from '@components/Heading'
 import { View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { styles } from './styles'
 
 export function TopBar() {
+  const { top } = useSafeAreaInsets()
+
   return (
-    <SafeAreaView edges={['top']}>
+    <View style={{ paddingTop: top }}>
       <View style={styles.container}>
         <BackButton color="gray" />
 
@@ -17,6 +19,6 @@ export function TopBar() {
 
         <View style={styles.offset} />
       </View>
-    </SafeAreaView>
+    </View>
   )
 }

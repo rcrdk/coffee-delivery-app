@@ -1,4 +1,3 @@
-import { Text } from '@components/Text'
 import { THEME } from '@styles/theme'
 import { useEffect } from 'react'
 import { Pressable } from 'react-native'
@@ -50,13 +49,8 @@ export function FilterTag({ name, selected, onPress }: Props) {
     ),
   }))
 
-  function onPressIn() {
-    scale.value = 0.9
-  }
-
-  function onPressOut() {
-    scale.value = 1
-  }
+  const onPressIn = () => (scale.value = 0.9)
+  const onPressOut = () => (scale.value = 1)
 
   useEffect(() => {
     active.value = selected ? 1 : 0

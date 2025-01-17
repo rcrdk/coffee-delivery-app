@@ -57,13 +57,8 @@ export function ProductHighlight({
     transform: [{ scale: withTiming(scale.value, { duration: 100 }) }],
   }))
 
-  function onPressIn() {
-    scale.value = 0.9
-  }
-
-  function onPressOut() {
-    scale.value = 1
-  }
+  const onPressIn = () => (scale.value = 0.9)
+  const onPressOut = () => (scale.value = 1)
 
   return (
     <Animated.View style={[styles.container, itemAnimation]}>

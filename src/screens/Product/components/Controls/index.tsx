@@ -5,11 +5,15 @@ import type { CartItem, CartItemSize } from '@dtos/cart'
 import type { Product } from '@dtos/product'
 import { useCart } from '@hooks/cart'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
-import { THEME } from '@styles/theme'
-import { Minus, Plus } from 'phosphor-react-native'
-import { useCallback, useState } from 'react'
-import { Pressable, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import type { QuantityModes } from '@utils/set-quantity-mode'
+import { useCallback, useEffect, useState } from 'react'
+import { View } from 'react-native'
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import uuid from 'react-native-uuid'
 
 import { Radio } from '../Radio'
@@ -20,13 +24,16 @@ type Props = {
 }
 
 export function Controls({ product }: Props) {
+  const translate = useSharedValue(100)
+
   const [sizeSelected, setSizeSelected] = useState<CartItemSize>('114ml')
   const [quantity, setQuantity] = useState(1)
 
   const { onAddToCart } = useCart()
+  const { bottom } = useSafeAreaInsets()
   const navigator = useNavigation()
 
-  function handleQuantity(mode: 'increase' | 'decrease') {
+  function handleQuantity(mode: QuantityModes) {
     setQuantity((prev) => {
       if (mode === 'decrease' && prev > 1) --prev
       if (mode === 'increase') prev++
@@ -46,6 +53,21 @@ export function Controls({ product }: Props) {
     navigator.navigate('catalog')
   }
 
+  const controlsContainerAnimation = useAnimatedStyle(() => ({
+    transform: [{ translateY: translate.value }],
+  }))
+
+  useEffect(() => {
+    const timer = setTimeout(
+      () => (translate.value = withTiming(0, { duration: 600 })),
+      250,
+    )
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [translate])
+
   useFocusEffect(
     useCallback(() => {
       setSizeSelected('114ml')
@@ -54,7 +76,16 @@ export function Controls({ product }: Props) {
   )
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.container}>
+    <Animated.View
+      style={[
+        styles.container,
+        controlsContainerAnimation,
+        { paddingBottom: bottom },
+      ]}
+      onLayout={(event) => {
+        translate.value = event.nativeEvent.layout.height
+      }}
+    >
       <View style={styles.inner}>
         <Text size="sm" color="gray400">
           Selecione o tamanho:
@@ -90,6 +121,6 @@ export function Controls({ product }: Props) {
           <Button label="Adicionar" type="purple" onPress={handleAddToCart} />
         </View>
       </View>
-    </SafeAreaView>
+    </Animated.View>
   )
 }

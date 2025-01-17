@@ -12,9 +12,4 @@ export const styles = StyleSheet.create({
     borderColor: THEME.COLORS.gray700,
     borderWidth: 1,
   },
-
-  radioSelected: {
-    backgroundColor: THEME.COLORS.white,
-    borderColor: THEME.COLORS.purple,
-  },
 })
