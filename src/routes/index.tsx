@@ -1,3 +1,4 @@
+import { PortalProvider } from '@gorhom/portal'
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { THEME } from '@styles/theme'
 
@@ -9,7 +10,9 @@ export function Routes() {
 
   return (
     <NavigationContainer theme={navigatonTheme}>
-      <AppRoutes />
+      <PortalProvider>
+        <AppRoutes />
+      </PortalProvider>
     </NavigationContainer>
   )
 }

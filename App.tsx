@@ -65,14 +65,12 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar translucent />
 
-      <PortalProvider>
-        <CartContextProvider>
-          <SearchContextProvider>
-            {showContent && <Routes />}
-            {showSplashScreen && <SplashScreenComponent />}
-          </SearchContextProvider>
-        </CartContextProvider>
-      </PortalProvider>
+      <CartContextProvider>
+        <SearchContextProvider>
+          {showContent && <Routes />}
+          {showSplashScreen && <SplashScreenComponent />}
+        </SearchContextProvider>
+      </CartContextProvider>
     </GestureHandlerRootView>
   )
 }

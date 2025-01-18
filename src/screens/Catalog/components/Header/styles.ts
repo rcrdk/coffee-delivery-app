@@ -16,6 +16,9 @@ export const styles = StyleSheet.create({
     paddingRight: 12,
     paddingLeft: 44,
     borderRadius: 4,
+    fontFamily: THEME.FONTS.bodyRegular,
+    fontSize: THEME.SIZE.BODY.sm,
+    color: THEME.COLORS.gray900,
   },
 
   searchIcon: {
@@ -23,6 +26,7 @@ export const styles = StyleSheet.create({
     left: 12,
     top: 12,
     height: '100%',
+    pointerEvents: 'none',
   },
 
   decoration: {

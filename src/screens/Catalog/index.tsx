@@ -122,24 +122,7 @@ export function Catalog() {
     })
   }
 
-  // function handleSearchItems(query: string) {
-  //   setSearchProducts(query)
-  // }
-
   const groupedProducts = useMemo(() => {
-    // const productSearch = products.filter((item) => {
-    //   if (searchProducts) {
-    //     const query = searchProducts.toLowerCase().normalize('NFC')
-
-    //     return (
-    //       item.name.toLowerCase().normalize('NFC').includes(query) ||
-    //       item.category.toLowerCase().normalize('NFC').includes(query) ||
-    //       item.description.toLowerCase().normalize('NFC').includes(query)
-    //     )
-    //   }
-
-    //   return true
-    // })
     const groupedProducts = groupBy(products, 'category')
     const groupProductsList = Object.entries(groupedProducts).map((item) => {
       return {

@@ -14,16 +14,19 @@ import { styles } from './styles'
 
 type Props = {
   product: Product
+  onPress?: VoidFunction
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
-export function ProductSection({ product }: Props) {
+export function ProductSection({ product, onPress }: Props) {
   const scale = useSharedValue(1)
 
   const navigator = useNavigation()
 
   function handleNavigation() {
+    if (onPress) onPress()
+
     navigator.navigate('product', { id: product.id.toString() })
   }
 
