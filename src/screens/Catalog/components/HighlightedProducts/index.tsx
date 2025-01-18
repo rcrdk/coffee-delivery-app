@@ -1,7 +1,8 @@
 import { products } from '@data/products'
+import type { Product } from '@dtos/product'
 import { useFocusEffect } from '@react-navigation/native'
 import { useCallback, useEffect, useMemo } from 'react'
-import { Dimensions, View } from 'react-native'
+import { Dimensions, type ListRenderItemInfo, View } from 'react-native'
 import Animated, {
   useAnimatedRef,
   useAnimatedScrollHandler,
@@ -22,10 +23,21 @@ export function HighlightedProducts() {
   const containerTranslate = useSharedValue(Dimensions.get('window').width)
   const containerScale = useSharedValue(0.75)
 
-  const containerTrnaslateAnimation = useAnimatedStyle(() => ({
+  const containerTranslateAnimation = useAnimatedStyle(() => ({
     width: containerTranslate.value,
     transform: [{ scale: containerScale.value }],
   }))
+
+  const renderItem = useCallback(
+    (props: ListRenderItemInfo<Product>) => (
+      <ProductHighlight
+        product={props.item}
+        currentPosition={scrollInX}
+        slidePosition={props.index}
+      />
+    ),
+    [scrollInX],
+  )
 
   const highlightedProducts = useMemo(() => {
     return products.filter((item) => item.highlighted)
@@ -48,24 +60,18 @@ export function HighlightedProducts() {
     }, [flatListRef]),
   )
 
+  const listEndElementStyles = { width: Dimensions.get('window').width - 272 }
+
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.inner]}>
         <Animated.FlatList
           data={highlightedProducts}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item, index }) => (
-            <ProductHighlight
-              product={item}
-              currentPosition={scrollInX}
-              slidePosition={index}
-            />
-          )}
-          ListFooterComponent={() => (
-            <View style={{ width: Dimensions.get('window').width - 272 }} />
-          )}
+          renderItem={renderItem}
+          ListFooterComponent={() => <View style={listEndElementStyles} />}
           ListHeaderComponent={() => (
-            <Animated.View style={containerTrnaslateAnimation} />
+            <Animated.View style={containerTranslateAnimation} />
           )}
           style={styles.list}
           showsHorizontalScrollIndicator={false}

@@ -1,4 +1,5 @@
 import { Text } from '@components/Text'
+import type { CartItemSize } from '@dtos/cart'
 import { THEME } from '@styles/theme'
 import { useEffect } from 'react'
 import { Pressable } from 'react-native'
@@ -12,7 +13,7 @@ import Animated, {
 import { styles } from './styles'
 
 type Props = {
-  value: string
+  value: CartItemSize
   checked: boolean
   onChange: VoidFunction
 }
@@ -57,7 +58,6 @@ export function Radio({ checked, value, onChange }: Props) {
 
   return (
     <AnimatedPressable
-      // style={[styles.radio, checked && styles.radioSelected]}
       style={[styles.radio, containerAnimation]}
       onPress={onChange}
       onPressIn={onPressIn}

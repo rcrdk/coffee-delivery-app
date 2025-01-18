@@ -20,10 +20,6 @@ export function CartButton() {
   const { cartCounter } = useCart()
   const navigator = useNavigation()
 
-  function handleNavigation() {
-    navigator.navigate('cart')
-  }
-
   const cartCounterAnimation = useAnimatedStyle(() => ({
     opacity: interpolate(counterVisible.value, [0, 1], [0, 1]),
     transform: [{ scale: interpolate(counterVisible.value, [0, 1], [0.5, 1]) }],
@@ -36,7 +32,7 @@ export function CartButton() {
   }, [cartCounter, counterVisible])
 
   return (
-    <Pressable style={styles.button} onPress={handleNavigation}>
+    <Pressable style={styles.button} onPress={() => navigator.navigate('cart')}>
       <ShoppingCart color={THEME.COLORS.yellowDark} weight="fill" size={24} />
 
       <Animated.View style={[styles.counter, cartCounterAnimation]}>

@@ -7,8 +7,8 @@ import { useCart } from '@hooks/cart'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import type { QuantityModes } from '@utils/set-quantity-mode'
 import { Audio } from 'expo-av'
-import { useCallback, useEffect, useState } from 'react'
-import { View } from 'react-native'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { type LayoutChangeEvent, View } from 'react-native'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -67,6 +67,17 @@ export function Controls({ product }: Props) {
     transform: [{ translateY: translate.value }],
   }))
 
+  const onLayoutFn = useCallback(
+    (event: LayoutChangeEvent) =>
+      (translate.value = event.nativeEvent.layout.height),
+    [translate],
+  )
+
+  const productSizes: CartItemSize[] = useMemo(
+    () => ['114ml', '140ml', '227ml'],
+    [],
+  )
+
   useEffect(() => {
     const timer = setTimeout(
       () => (translate.value = withTiming(0, { duration: 600 })),
@@ -87,14 +98,9 @@ export function Controls({ product }: Props) {
 
   return (
     <Animated.View
-      style={[
-        styles.container,
-        controlsContainerAnimation,
-        { paddingBottom: bottom },
-      ]}
-      onLayout={(event) => {
-        translate.value = event.nativeEvent.layout.height
-      }}
+      // eslint-disable-next-line prettier/prettier
+      style={[styles.container, controlsContainerAnimation, { paddingBottom: bottom }]}
+      onLayout={onLayoutFn}
     >
       <View style={styles.inner}>
         <Text size="sm" color="gray400">
@@ -102,23 +108,14 @@ export function Controls({ product }: Props) {
         </Text>
 
         <View style={styles.radioGroup}>
-          <Radio
-            value="114ml"
-            checked={sizeSelected === '114ml'}
-            onChange={() => setSizeSelected('114ml')}
-          />
-
-          <Radio
-            value="140ml"
-            checked={sizeSelected === '140ml'}
-            onChange={() => setSizeSelected('140ml')}
-          />
-
-          <Radio
-            value="227ml"
-            checked={sizeSelected === '227ml'}
-            onChange={() => setSizeSelected('227ml')}
-          />
+          {productSizes.map((item) => (
+            <Radio
+              key={item}
+              value={item}
+              checked={sizeSelected === item}
+              onChange={() => setSizeSelected(item)}
+            />
+          ))}
         </View>
 
         <View style={styles.quantityContainer}>

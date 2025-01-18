@@ -32,12 +32,6 @@ export function ProductHighlight({
 
   const navigator = useNavigation()
 
-  function handleNavigation() {
-    navigator.navigate('product', { id: product.id.toString() })
-  }
-
-  const price = priceFormatted(product.price)
-
   const itemAnimation = useAnimatedStyle(() => {
     return {
       transform: [
@@ -64,7 +58,8 @@ export function ProductHighlight({
     <Animated.View style={[styles.container, itemAnimation]}>
       <AnimatedPressable
         style={[styles.inner, pressableAnimation]}
-        onPress={handleNavigation}
+        // eslint-disable-next-line prettier/prettier
+        onPress={() => navigator.navigate('product', { id: product.id.toString() })}
         onPressIn={onPressIn}
         onPressOut={onPressOut}
       >
@@ -86,7 +81,7 @@ export function ProductHighlight({
               R$
             </Text>
             <Heading color="yellowDark" size="lg">
-              {price}
+              {priceFormatted(product.price)}
             </Heading>
           </View>
         </View>

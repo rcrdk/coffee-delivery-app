@@ -26,7 +26,6 @@ export function ProductSection({ product, onPress }: Props) {
 
   function handleNavigation() {
     if (onPress) onPress()
-
     navigator.navigate('product', { id: product.id.toString() })
   }
 

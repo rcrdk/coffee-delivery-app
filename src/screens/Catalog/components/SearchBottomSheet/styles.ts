@@ -11,9 +11,19 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
 
+  empty: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
   searchTitle: {
     paddingVertical: THEME.SPACE.X,
     paddingHorizontal: THEME.SPACE.X,
+  },
+
+  separator: {
+    height: 24,
   },
 
   searchMessage: {

@@ -1,9 +1,9 @@
-import { Button } from '@components/Button'
 import { Heading } from '@components/Heading'
-import { Text } from '@components/Text'
 import { products } from '@data/products'
+import type { Product } from '@dtos/product'
 import {
   BottomSheetBackdrop,
+  type BottomSheetBackdropProps,
   BottomSheetFlatList,
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -12,7 +12,7 @@ import { Portal } from '@gorhom/portal'
 import { useSearch } from '@hooks/search'
 import { THEME } from '@styles/theme'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { Dimensions, View } from 'react-native'
+import { Dimensions, type ListRenderItemInfo, View } from 'react-native'
 import Animated, {
   LinearTransition,
   SlideInLeft,
@@ -21,7 +21,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { ProductSection } from '../ProductSection'
-import { Illustration } from './Illustration'
+import { Empty } from './empty'
 import { styles } from './styles'
 
 export function SearchBottomSheet() {
@@ -51,11 +51,65 @@ export function SearchBottomSheet() {
     bottomSheetModalRef.current?.dismiss()
   }, [])
 
+  const renderBackdrop = useCallback(
+    (props: BottomSheetBackdropProps) => (
+      <BottomSheetBackdrop
+        {...props}
+        enableTouchThrough={true}
+        opacity={1}
+        disappearsOnIndex={-1}
+        style={styles.backdrop}
+      />
+    ),
+    [],
+  )
+
+  const renderHeader = useCallback(
+    () =>
+      productsFiltered.length > 0 ? (
+        <Animated.View
+          style={styles.searchTitle}
+          entering={SlideInLeft.duration(750)}
+          exiting={SlideOutRight.duration(500)}
+        >
+          {productsFiltered.length === 1 ? (
+            <Heading color="yellowDark" size="md">
+              1 resultado encontrado:
+            </Heading>
+          ) : (
+            <Heading color="yellowDark" size="md">
+              {productsFiltered.length} resultados encontrados:
+            </Heading>
+          )}
+        </Animated.View>
+      ) : (
+        <></>
+      ),
+    [productsFiltered],
+  )
+
+  const renderItem = useCallback(
+    (props: ListRenderItemInfo<Product>) => (
+      <Animated.View
+        entering={SlideInLeft.duration(750).delay(100 * (props.index + 1))}
+        exiting={SlideOutRight.duration(500).delay(100 * (props.index + 1))}
+      >
+        <ProductSection product={props.item} onPress={handleDismiss} />
+      </Animated.View>
+    ),
+    [handleDismiss],
+  )
+
   useEffect(() => {
     if (bottomSheetModalRef.current && searchOpen) {
       bottomSheetModalRef.current?.present()
     }
   }, [onToggleSearch, searchOpen])
+
+  const contentContainerStyle = [
+    styles.contentContainer,
+    { paddingBottom: bottom + THEME.SPACE.Y },
+  ]
 
   return (
     <Portal>
@@ -66,78 +120,20 @@ export function SearchBottomSheet() {
           maxDynamicContentSize={screenHeight - 72 - top}
           enableDynamicSizing={false}
           snapPoints={[screenHeight - 72 - top]}
-          backdropComponent={(props) => (
-            <BottomSheetBackdrop
-              {...props}
-              enableTouchThrough={true}
-              opacity={1}
-              disappearsOnIndex={-1}
-              style={styles.backdrop}
-            />
-          )}
+          backdropComponent={renderBackdrop}
         >
           <BottomSheetFlatList
             data={productsFiltered}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item, index }) => (
-              <Animated.View
-                entering={SlideInLeft.duration(750).delay(100 * (index + 1))}
-                exiting={SlideOutRight.duration(500).delay(100 * (index + 1))}
-              >
-                <ProductSection product={item} onPress={handleDismiss} />
-              </Animated.View>
-            )}
+            renderItem={renderItem}
             layout={LinearTransition.springify()}
-            contentContainerStyle={[
-              styles.contentContainer,
-              { paddingBottom: bottom + THEME.SPACE.Y },
-            ]}
+            contentContainerStyle={contentContainerStyle}
             style={styles.container}
             showsVerticalScrollIndicator={false}
             automaticallyAdjustKeyboardInsets={productsFiltered.length === 0}
-            ItemSeparatorComponent={() => <View style={{ height: 24 }} />}
-            ListHeaderComponent={() =>
-              productsFiltered.length > 0 ? (
-                <Animated.View
-                  style={styles.searchTitle}
-                  entering={SlideInLeft.duration(750)}
-                  exiting={SlideOutRight.duration(500)}
-                >
-                  {productsFiltered.length === 1 ? (
-                    <Heading color="yellowDark" size="md">
-                      1 resultado encontrado:
-                    </Heading>
-                  ) : (
-                    <Heading color="yellowDark" size="md">
-                      {productsFiltered.length} resultados encontrados:
-                    </Heading>
-                  )}
-                </Animated.View>
-              ) : (
-                <></>
-              )
-            }
-            ListEmptyComponent={() => (
-              <View style={styles.searchMessage}>
-                <Illustration />
-
-                <Heading size="lg" color="yellowDark" center>
-                  Nenhum café encontrado
-                </Heading>
-
-                <Text color="gray400" center>
-                  Não encontramos cafés com o termo "{searchQuery}". Tente
-                  outros termos.
-                </Text>
-
-                <Button
-                  label="Fechar"
-                  type="purple"
-                  style={styles.searchButton}
-                  onPress={handleDismiss}
-                />
-              </View>
-            )}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            ListHeaderComponent={renderHeader}
+            ListEmptyComponent={() => <Empty onDismiss={handleDismiss} />}
           />
         </BottomSheetModal>
       </BottomSheetModalProvider>

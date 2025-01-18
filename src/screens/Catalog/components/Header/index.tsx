@@ -1,10 +1,9 @@
 import { Heading } from '@components/Heading'
-import { Text } from '@components/Text'
 import { useSearch } from '@hooks/search'
 import { THEME } from '@styles/theme'
 import { MagnifyingGlass } from 'phosphor-react-native'
-import { useEffect, useState } from 'react'
-import { Image, Pressable, TextInput, View } from 'react-native'
+import { useCallback, useEffect, useState } from 'react'
+import { Image, TextInput } from 'react-native'
 import Animated, {
   Easing,
   interpolate,
@@ -33,13 +32,6 @@ export function Header() {
     ],
   }))
 
-  function setShakeAnimation() {
-    shake.value = withSequence(
-      withTiming(3, { duration: 400, easing: Easing.bounce }),
-      withTiming(0, { duration: 400, easing: Easing.bounce }),
-    )
-  }
-
   const shakeStyleAnimated = useAnimatedStyle(() => {
     return {
       transform: [
@@ -53,6 +45,19 @@ export function Header() {
       ],
     }
   })
+
+  const onSubmitEditingFn = useCallback(() => {
+    function setShakeAnimation() {
+      shake.value = withSequence(
+        withTiming(3, { duration: 400, easing: Easing.bounce }),
+        withTiming(0, { duration: 400, easing: Easing.bounce }),
+      )
+    }
+
+    onChangeSearchQuery(query)
+
+    if (!query) setShakeAnimation()
+  }, [onChangeSearchQuery, query, shake])
 
   useEffect(() => {
     containerTranslate.value = withDelay(250, withTiming(0, { duration: 1000 }))
@@ -72,10 +77,7 @@ export function Header() {
           onChangeText={setQuery}
           value={query}
           returnKeyType="search"
-          onSubmitEditing={() => {
-            onChangeSearchQuery(query)
-            if (!query) setShakeAnimation()
-          }}
+          onSubmitEditing={onSubmitEditingFn}
         />
 
         <MagnifyingGlass

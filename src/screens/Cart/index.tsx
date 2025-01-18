@@ -1,8 +1,9 @@
+import type { CartItem as CartItemDTO } from '@dtos/cart'
 import { useCart } from '@hooks/cart'
 import { THEME } from '@styles/theme'
 import { Trash } from 'phosphor-react-native'
-import { useRef } from 'react'
-import { Alert, FlatList, View } from 'react-native'
+import { useCallback, useRef } from 'react'
+import { FlatList, type ListRenderItemInfo, View } from 'react-native'
 import Swipeable, {
   type SwipeableMethods,
 } from 'react-native-gesture-handler/ReanimatedSwipeable'
@@ -23,18 +24,50 @@ export function Cart() {
 
   const { cartItems, cartCounter, onRemoveProduct } = useCart()
 
-  function handleRemoveItem(cartItemId: string, index: number) {
-    swipeableRefs.current?.[index].close()
+  const handleRemoveItem = useCallback(
+    (cartItemId: string, index: number) => {
+      swipeableRefs.current?.[index].close()
+      onRemoveProduct(cartItemId)
+    },
+    [onRemoveProduct],
+  )
 
-    Alert.alert('Remover do carrinho', 'Deseja este café do carrinho?', [
-      { text: 'Quero manter', style: 'cancel' },
-      {
-        text: 'Remover',
-        style: 'destructive',
-        onPress: () => onRemoveProduct(cartItemId),
-      },
-    ])
-  }
+  const renderItem = useCallback(
+    (props: ListRenderItemInfo<CartItemDTO>) => {
+      return (
+        <Animated.View
+          entering={FadeInDown.duration(500).delay(200 * (props.index + 1))}
+          exiting={SlideOutLeft.duration(500)}
+          layout={LinearTransition.springify()}
+        >
+          <Swipeable
+            overshootLeft={false}
+            containerStyle={styles.swipeableContainer}
+            onSwipeableOpen={() => handleRemoveItem(props.item.id, props.index)}
+            rightThreshold={5}
+            renderLeftActions={() => null}
+            renderRightActions={() => {
+              return (
+                <View style={styles.swipeableRemove}>
+                  <Trash size={24} color={THEME.COLORS.redDark} />
+                </View>
+              )
+            }}
+            ref={(ref) => {
+              if (ref) {
+                swipeableRefs.current.push(ref)
+              }
+            }}
+          >
+            <CartItem data={props.item} />
+          </Swipeable>
+        </Animated.View>
+      )
+    },
+    [handleRemoveItem],
+  )
+
+  const shouldDisplayFooter = cartCounter > 0
 
   return (
     <View style={styles.container}>
@@ -43,35 +76,7 @@ export function Cart() {
       <FlatList
         data={cartItems}
         keyExtractor={(item) => item.id}
-        renderItem={({ item, index }) => (
-          <Animated.View
-            entering={FadeInDown.duration(500).delay(200 * (index + 1))}
-            exiting={SlideOutLeft.duration(500)}
-            layout={LinearTransition.springify()}
-          >
-            <Swipeable
-              overshootLeft={false}
-              containerStyle={styles.swipeableContainer}
-              onSwipeableOpen={() => handleRemoveItem(item.id, index)}
-              rightThreshold={5}
-              renderLeftActions={() => null}
-              renderRightActions={() => {
-                return (
-                  <View style={styles.swipeableRemove}>
-                    <Trash size={24} color={THEME.COLORS.redDark} />
-                  </View>
-                )
-              }}
-              ref={(ref) => {
-                if (ref) {
-                  swipeableRefs.current.push(ref)
-                }
-              }}
-            >
-              <CartItem data={item} />
-            </Swipeable>
-          </Animated.View>
-        )}
+        renderItem={renderItem}
         style={styles.list}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ flex: cartCounter ? 0 : 1 }}
@@ -79,7 +84,7 @@ export function Cart() {
         ListEmptyComponent={() => <Empty />}
       />
 
-      {cartCounter > 0 && <Footer />}
+      {shouldDisplayFooter && <Footer />}
     </View>
   )
 }

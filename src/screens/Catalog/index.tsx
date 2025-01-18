@@ -5,10 +5,12 @@ import type { Product } from '@dtos/product'
 import { THEME } from '@styles/theme'
 import { groupBy } from '@utils/group-by'
 import { MapPin } from 'phosphor-react-native'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   BackHandler,
+  type DefaultSectionT,
   SectionList,
+  type SectionListData,
   type SectionListProps,
   View,
 } from 'react-native'
@@ -113,14 +115,17 @@ export function Catalog() {
     paddingTop: filterEnterTranslate.value,
   }))
 
-  function handleScrollToSection(sectionIndex: number) {
-    listRef.current?.scrollToLocation({
-      animated: true,
-      sectionIndex,
-      itemIndex: 0,
-      viewOffset: 175 + top + 100,
-    })
-  }
+  const handleScrollToSection = useCallback(
+    (sectionIndex: number) => {
+      listRef.current?.scrollToLocation({
+        animated: true,
+        sectionIndex,
+        itemIndex: 0,
+        viewOffset: 175 + top + 100,
+      })
+    },
+    [listRef, top],
+  )
 
   const groupedProducts = useMemo(() => {
     const groupedProducts = groupBy(products, 'category')
@@ -139,6 +144,51 @@ export function Catalog() {
       scrollInY.value = event.contentOffset.y
     },
   })
+
+  const renderListHeader = useCallback(
+    (onScroll: (index: number) => void) => (
+      <View style={[styles.container, { paddingTop: top + 76 + 16 }]}>
+        <View>
+          <Header />
+          <HighlightedProducts />
+
+          <Animated.View
+            style={[styles.enterCurtain, curtainHeightAnimation]}
+          />
+        </View>
+
+        <View
+          // eslint-disable-next-line prettier/prettier
+          onLayout={(event) => filterTopOffset.value = event.nativeEvent.layout.y}
+          style={styles.inlineFilterContainer}
+        >
+          <Animated.View style={[filtersEnterAnimation]}>
+            <Filters
+              activeSection={activeSection}
+              onSelect={handleScrollToSection}
+            />
+          </Animated.View>
+        </View>
+      </View>
+    ),
+    [
+      activeSection,
+      curtainHeightAnimation,
+      filterTopOffset,
+      filtersEnterAnimation,
+      handleScrollToSection,
+      top,
+    ],
+  )
+
+  const renderSectionHeader = useCallback(
+    (info: { section: SectionListData<Product, DefaultSectionT> }) => (
+      <Heading size="xs" color="gray400" style={styles.sectionListTitle}>
+        {info.section.title}
+      </Heading>
+    ),
+    [],
+  )
 
   useEffect(() => {
     curtainHeight.value = withDelay(250, withTiming(200, { duration: 1000 }))
@@ -186,40 +236,11 @@ export function Catalog() {
       <AnimatedSectionList
         sections={groupedProducts}
         keyExtractor={(item) => String(item.id)}
-        ListHeaderComponent={() => (
-          <View style={[styles.container, { paddingTop: top + 76 + 16 }]}>
-            <View>
-              <Header />
-              <HighlightedProducts />
-
-              <Animated.View
-                style={[styles.enterCurtain, curtainHeightAnimation]}
-              />
-            </View>
-
-            <View
-              // eslint-disable-next-line prettier/prettier
-              onLayout={(event) => filterTopOffset.value = event.nativeEvent.layout.y}
-              style={styles.inlineFilterContainer}
-            >
-              <Animated.View style={[filtersEnterAnimation]}>
-                <Filters
-                  activeSection={activeSection}
-                  onSelect={handleScrollToSection}
-                />
-              </Animated.View>
-            </View>
-          </View>
-        )}
-        renderSectionHeader={({ section }) => (
-          <Heading size="xs" color="gray400" style={styles.sectionListTitle}>
-            {section.title}
-          </Heading>
-        )}
+        ListHeaderComponent={renderListHeader}
+        renderSectionHeader={renderSectionHeader}
         renderItem={({ item }) => <ProductSection product={item} />}
-        SectionSeparatorComponent={(data) => (
-          <SectionSeparator type={!!data.leadingItem ? 'section' : 'title'} />
-        )}
+        // eslint-disable-next-line prettier/prettier
+        SectionSeparatorComponent={(data) => (<SectionSeparator type={!!data.leadingItem ? 'section' : 'title'} />)}
         ItemSeparatorComponent={() => <SectionSeparator type="item" />}
         style={styles.sectionList}
         contentContainerStyle={styles.sectionListContainer}
@@ -229,9 +250,7 @@ export function Catalog() {
         onScroll={scrollHandler}
         scrollEventThrottle={16}
         ref={listRef}
-        viewabilityConfig={{
-          itemVisiblePercentThreshold: 50,
-        }}
+        viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
         onViewableItemsChanged={({ viewableItems }) => {
           setActiveSection(
             viewableItems.at(2)?.section?.title ??

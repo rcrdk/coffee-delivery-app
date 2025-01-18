@@ -12,16 +12,11 @@ type Props = {
 export function BackButton({ color }: Props) {
   const navigator = useNavigation()
 
-  function handleNavigation() {
-    navigator.goBack()
-  }
+  const arrowColor = THEME.COLORS[color === 'white' ? 'white' : 'gray100']
 
   return (
-    <Pressable style={styles.button} onPress={handleNavigation}>
-      <ArrowLeft
-        color={THEME.COLORS[color === 'white' ? 'white' : 'gray100']}
-        size={22}
-      />
+    <Pressable style={styles.button} onPress={() => navigator.goBack()}>
+      <ArrowLeft color={arrowColor} size={22} />
     </Pressable>
   )
 }
